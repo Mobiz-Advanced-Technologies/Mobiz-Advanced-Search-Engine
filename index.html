@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Mobiz-Advanced-Search-Engine</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/futura-font@1.0.0/styles.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            font-family: FuturaBT-Medium;
+        }
+
+        input {
+            padding: 10px;
+            width: 45vw;
+        }
+
+        html {
+            padding: 10px;
+        }
+
+        center {
+            margin-bottom: 22px;
+        }
+
+        #resultsContainer {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        img {
+            max-width: 15vw;
+        }
+
+        .searchmatch {
+            font-weight: bold;
+        }
+
+        div h3 {
+            margin-bottom: 0px;
+        }
+
+        .link {
+            color: green;
+        }
+
+        #resultsMeter {
+            width: fit-content;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <img src="https://avatars.githubusercontent.com/u/129295928?s=200&v=4"></img><br><br>
+        <input type="search" placeholder="Search..." onchange="search(this.value)"><input type="number"
+            id="resultsMeter" value="20">
+    </center>
+
+    <hr>
+
+    <div id="resultsContainer">
+
+    </div>
+
+    <script>
+        async function search(query) {
+            const amount = document.getElementById('resultsMeter').value
+            const response = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=${amount}&srsearch=` + query);
+            const jsonData = await response.json();
+            document.getElementById('resultsContainer').innerHTML = ""
+            jsonData.query.search.forEach(function (result) {
+                let div = document.createElement('div');
+                const url = `https://en.wikipedia.org/?curid=${result.pageid}`;
+                console.log(result)
+                div.innerHTML = `
+            	<a href="${url}"><h3>${result.title}</h3></a>
+                <a href="${url}" class="link">${url}</a>
+                <br>
+                ${result.snippet}
+            `;
+
+                document.getElementById('resultsContainer').appendChild(div);
+            })
+        }
+    </script>
+</body>
+
+</html>
